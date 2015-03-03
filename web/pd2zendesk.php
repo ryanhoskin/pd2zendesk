@@ -26,19 +26,7 @@ if ($messages) foreach ($messages->messages as $webhook) {
       $url = "https://$zd_subdomain.zendesk.com/api/v2/tickets/$ticket_id/tags.json";
       $data = array('tags'=>array('pd_integration'));
       $data_json = json_encode($data);
-
-      http_request($url, $data_json, "DELETE", "token", $pd_username, $pd_api_token);
-
-      /*$ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_json)));
-      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-      curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-      curl_setopt($ch, CURLOPT_USERPWD, "$zd_username/token:$zd_api_token");
-      $response  = curl_exec($ch);
-      curl_close($ch);*/
+      http_request($url, $data_json, "DELETE", "basic", $pd_username, $pd_api_token);
       $verb = "resolved";
       break;
     default:
@@ -52,34 +40,12 @@ if ($messages) foreach ($messages->messages as $webhook) {
 
   http_request($url, $data_json, "PUT", "basic", $zd_username, $zd_api_token);
 
-  /*$ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_json)));
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-  curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-  curl_setopt($ch, CURLOPT_USERPWD, "$zd_username/token:$zd_api_token");
-  $response  = curl_exec($ch);
-  curl_close($ch);*/
-
   if ($status_code != "200" && $verb != "resolved") {
     //If we did not POST correctly to Zendesk, we'll add a note to the ticket, as long as it was a triggered or acknowledged ticket.
     $url = "https://$pd_subdomain.pagerduty.com/api/v1/incidents/$incident_id/notes";
-
     $data = array('note'=>array('content'=>'The Zendesk ticket was not updated properly.  Please try again.'),'requester_id'=>"$pd_requester_id");
     $data_json = json_encode($data);
-
     http_request($url, $data_json, "POST", "token", $pd_username, $pd_api_token);
-    /*$ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_json),"Authorization: Token token=$pd_api_token"));
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-    curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPAUTH);
-    $response  = curl_exec($ch);
-    curl_close($ch);*/
   }
 }
 function http_request($url, $data_json, $method, $auth_type, $username, $token) {
