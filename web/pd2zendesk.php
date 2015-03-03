@@ -62,7 +62,7 @@ if ($messages) foreach ($messages->messages as $webhook) {
     mail("ryan@pagerduty.com", $subject, $body);
   }
   if ($status_code != "200") {
-    $url = "https://$pd_subdomain.pagerduty.com/api/v1/incidents/$incident_id/notes"
+    $url = "https://$pd_subdomain.pagerduty.com/api/v1/incidents/$incident_id/notes";
     
     $data = array('ticket'=>array('comment'=>array('public'=>'false','body'=>"The Zendesk ticket was not updated properly.  Please try again.")));
     $data_json = json_encode($data);
