@@ -15,7 +15,7 @@
     },
     "ZENDESK_SUBDOMAIN": {
       "description": "The name of your Zendesk subdomain, as it appears in the URL."
-    }
+    },
     "PAGERDUTY_API_TOKEN": {
       "description": "Your 20-character alphanumeric PagerDuty API Access token."
     },
