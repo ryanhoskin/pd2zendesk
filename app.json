@@ -10,8 +10,8 @@
     "ZENDESK_USERNAME": {
       "description": "The username of the Zendesk user that will update the Zendesk ticket."
     },
-    "ZENDESK_PASSWORD": {
-      "description": "The password for the Zendesk user."
+    "ZENDESK_API_TOKEN": {
+      "description": "The API token for your Zendesk account."
     },
     "ZENDESK_SUBDOMAIN": {
       "description": "The name of your Zendesk subdomain, as it appears in the URL."
