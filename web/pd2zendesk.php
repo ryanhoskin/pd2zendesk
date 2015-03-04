@@ -26,7 +26,7 @@ if ($messages) foreach ($messages->messages as $webhook) {
       $url = "https://$zd_subdomain.zendesk.com/api/v2/tickets/$ticket_id/tags.json";
       $data = array('tags'=>array('pd_integration'));
       $data_json = json_encode($data);
-      http_request($url, $data_json, "DELETE", "basic", $pd_username, $pd_api_token);
+      http_request($url, $data_json, "DELETE", "basic", $zd_username, $zd_api_token);
       $verb = "resolved";
       break;
     default:
