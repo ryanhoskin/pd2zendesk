@@ -17,16 +17,16 @@ if ($messages) foreach ($messages->messages as $webhook) {
   switch ($webhook_type) {
     case "incident.trigger":
       $verb = "triggered";
+      //Remove the pd_integration tag in Zendesk to eliminate further updates
+      $url = "https://$zd_subdomain.zendesk.com/api/v2/tickets/$ticket_id/tags.json";
+      $data = array('tags'=>array('pd_integration'));
+      $data_json = json_encode($data);
+      $status_code = http_request($url, $data_json, "DELETE", "basic", $zd_username, $zd_api_token);
       break;
     case "incident.acknowledge":
       $verb = "acknowledged ";
       break;
     case "incident.resolve":
-      //Remove the pd_integration tag in Zendesk to eliminate further updates
-      $url = "https://$zd_subdomain.zendesk.com/api/v2/tickets/$ticket_id/tags.json";
-      $data = array('tags'=>array('pd_integration'));
-      $data_json = json_encode($data);
-      http_request($url, $data_json, "DELETE", "basic", $zd_username, $zd_api_token);
       $verb = "resolved";
       break;
     default:
@@ -38,7 +38,7 @@ if ($messages) foreach ($messages->messages as $webhook) {
   $data = array('ticket'=>array('comment'=>array('public'=>'false','body'=>"This ticket has been $verb in PagerDuty.  To view the incident, go to $ticket_url.")));
   $data_json = json_encode($data);
 
-  http_request($url, $data_json, "PUT", "basic", $zd_username, $zd_api_token);
+  $status_code = http_request($url, $data_json, "PUT", "basic", $zd_username, $zd_api_token);
 
   if ($status_code != "200" && $verb != "resolved") {
     //If we did not POST correctly to Zendesk, we'll add a note to the ticket, as long as it was a triggered or acknowledged ticket.
