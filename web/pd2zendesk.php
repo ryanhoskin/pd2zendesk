@@ -30,7 +30,7 @@ if ($messages) foreach ($messages->messages as $webhook) {
       $verb = "resolved";
       break;
     default:
-      continue;
+      continue 2;
   }
   //Update the Zendesk ticket when the incident is acknowledged or resolved.
   $url = "https://$zd_subdomain.zendesk.com/api/v2/tickets/$ticket_id.json";
