@@ -1,5 +1,5 @@
 <?php
-$messages = json_decode($HTTP_RAW_POST_DATA);
+$messages = json_decode(file_get_contents("php://input"));
 
 $zd_subdomain = getenv('ZENDESK_SUBDOMAIN');
 $zd_username = getenv('ZENDESK_USERNAME');
