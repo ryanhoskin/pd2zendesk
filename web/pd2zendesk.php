@@ -17,6 +17,12 @@ if ($messages) foreach ($messages->messages as $webhook) {
   switch ($webhook_type) {
     case "incident.trigger":
       $verb = "triggered";
+      $assigned_array = $webhook->data->incident->assigned_to;
+      $assigned_users = array();
+      foreach ($assigned_array as $assigned_user) {
+        array_push($assigned_users, $assigned_user->object->name);
+      }
+      $action_message = " and is assigned to " . implode(", ", $assigned_users);
       //Remove the pd_integration tag in Zendesk to eliminate further updates
       $url = "https://$zd_subdomain.zendesk.com/api/v2/tickets/$ticket_id/tags.json";
       $data = array('tags'=>array('pd_integration'));
