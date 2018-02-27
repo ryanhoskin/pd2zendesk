@@ -4,8 +4,8 @@ $messages = json_decode(file_get_contents("php://input"));
 $zd_subdomain = getenv('ZENDESK_SUBDOMAIN');
 $zd_username = getenv('ZENDESK_USERNAME');
 $zd_api_token = getenv('ZENDESK_API_TOKEN');
-$pd_subdomain = getenv('PAGERDUTY_SUBDOMAIN');
 $pd_api_token = getenv('PAGERDUTY_API_TOKEN');
+$pd_from_email = getenv('PAGERDUTY_USER_EMAIL');
 
 if ($messages) foreach ($messages->messages as $webhook) {
   $webhook_type = $webhook->type;
@@ -55,17 +55,23 @@ if ($messages) foreach ($messages->messages as $webhook) {
 
   if ($status_code != "200" && $verb != "resolved") {
     //If we did not POST correctly to Zendesk, we'll add a note to the ticket, as long as it was a triggered or acknowledged ticket.
-    $url = "https://$pd_subdomain.pagerduty.com/api/v1/incidents/$incident_id/notes";
-    $data = array('note'=>array('content'=>'The Zendesk ticket was not updated properly.  Please try again.'),'requester_id'=>"$pd_requester_id");
+    $url = "https//api.pagerduty.com/incidents/$incident_id/notes";
+    $data = array('note'=>array('content'=>'The Zendesk ticket was not updated properly.  Please try again.'));
     $data_json = json_encode($data);
-    http_request($url, $data_json, "POST", "token", $pd_username, $pd_api_token);
+    http_request($url, $data_json, "POST", "token", $pd_from_email, $pd_api_token);
   }
 }
 function http_request($url, $data_json, $method, $auth_type, $username, $token) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   if ($auth_type == "token") {
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_json),"Authorization: Token token=$token"));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Accept: application/vnd.pagerduty+json;version=2',
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data_json),
+        "Authorization: Token token=$token",
+        "From: $username"
+    ));
     curl_setopt($ch, CURLOPT_HTTPAUTH);
   }
   else if ($auth_type == "basic") {

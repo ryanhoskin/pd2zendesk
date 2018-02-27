@@ -19,8 +19,8 @@
     "PAGERDUTY_API_TOKEN": {
       "description": "Your 20-character alphanumeric PagerDuty API Access token."
     },
-    "PAGERDUTY_SUBDOMAIN": {
-      "description": "The name of your PagerDuty subdomain, as it appears in the URL."
+    "PAGERDUTY_USER_EMAIL": {
+      "description": "The email address of the user as whom to post notes on the origin PagerDuty incident when necessary"
     }
   }
 }
