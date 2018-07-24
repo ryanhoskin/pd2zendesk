@@ -72,7 +72,6 @@ function http_request($url, $data_json, $method, $auth_type, $username, $token) 
         "Authorization: Token token=$token",
         "From: $username"
     ));
-    curl_setopt($ch, CURLOPT_HTTPAUTH);
   }
   else if ($auth_type == "basic") {
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_json)));
